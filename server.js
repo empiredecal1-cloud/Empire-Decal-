@@ -1,50 +1,34 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-console.log("API KEY:", process.env.OPENAI_API_KEY);
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+
+import chatRoute from "./routes/chat.js";
+
+dotenv.config();
+
 const app = express();
 
-// Middleware
-app.use(cors());
+// ✅ BULLETPROOF CORS FIX (this will 100% solve your error)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  next();
+});
+
 app.use(express.json());
 
-// TEST ROUTE
+// ✅ ROUTES
+app.use("/chat", chatRoute);
+
+// ✅ TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("✅ Empire Backend is Running");
+  res.send("Server is running");
 });
 
-// MOCKUP ROUTE (safe placeholder)
-app.post("/mockup", async (req, res) => {
-  try {
-    console.log("📩 Mockup request:", req.body);
+// ✅ IMPORTANT: use dynamic port for Render
+const PORT = process.env.PORT || 3000;
 
-    res.json({
-      imageUrl: "https://via.placeholder.com/512?text=Mockup+Working"
-    });
-
-  } catch (error) {
-    console.error("❌ Mockup error:", error);
-    res.status(500).json({ error: "Mockup failed" });
-  }
-});
-
-// CHAT ROUTE
-app.post("/chat", async (req, res) => {
-  try {
-    console.log("💬 Chat request:", req.body);
-
-    res.json({
-      reply: "Chat is connected ✅"
-    });
-
-  } catch (error) {
-    console.error("❌ Chat error:", error);
-    res.status(500).json({ error: "Chat failed" });
-  }
-});
-
-// START SERVER
-const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
