@@ -2,19 +2,16 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import chatRoute from "./routes/chat.js";
+import chatRoute from "./routes/utils.js"; // ✅ FIXED (was chat.js)
 
 dotenv.config();
 
 const app = express();
 
-// ✅ BULLETPROOF CORS FIX (this will 100% solve your error)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  next();
-});
+// ✅ CORS (allow everything for now)
+app.use(cors({
+  origin: "*"
+}));
 
 app.use(express.json());
 
@@ -26,7 +23,7 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-// ✅ IMPORTANT: use dynamic port for Render
+// ✅ IMPORTANT FOR RENDER
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
