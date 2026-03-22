@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import chatRoute from "./routes/utils.js"; // ✅ FIXED (was chat.js)
+import chatRoute from "./routes.js"; // ✅ FIXED (points to your actual file)
 
 dotenv.config();
 
